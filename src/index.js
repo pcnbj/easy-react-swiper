@@ -4,6 +4,7 @@ import "./index.css";
 const Swiper = props => {
 
   let itemWidth;
+  let itemMarginRight;
 
   //It's a debounce function...
   const debounce = (fn, delay) => {
@@ -22,12 +23,12 @@ const Swiper = props => {
     //Define swipe functions
     const swipeLeft = (item, transform) => {
         item.style.transform = `translateX(${transform +
-          Math.abs(itemWidth + props.itemMarginRight)}px)`;
+          Math.abs(itemWidth + itemMarginRight)}px)`;
       };
     
       const swipeRight = (item, transform) => {
         item.style.transform = `translateX(${-Math.abs(
-          -Math.abs(itemWidth + props.itemMarginRight) + transform
+          -Math.abs(itemWidth + itemMarginRight) + transform
         )}px)`;
       };
 
@@ -37,6 +38,7 @@ const Swiper = props => {
     let transform = 0;
     let index = 0;
     itemWidth = parseInt(window.getComputedStyle(document.querySelector(".swipe-track > *:first-child")).getPropertyValue("width").replace("px", ""));
+    itemMarginRight = parseInt(window.getComputedStyle(document.querySelector(".swipe-track > *:first-child")).getPropertyValue("margin-right").replace("px", ""));
     const swipeContainer = document.querySelector(".swipe-container");
     const swipeTrack = document.querySelector(".swipe-track");
 
@@ -68,7 +70,7 @@ const Swiper = props => {
                 //Check if swipe position is past the snap point
                 if (currentPosition / itemWidth >= props.snapPoint) {
                   //Check if out of bounds to the left
-                  if (transform + props.itemMarginRight + 5 > 0) {
+                  if (transform + itemMarginRight + 5 > 0) {
                     //Reset back to first item
                     swipeTrack.style.transform = `translateX(${0})`;
                   } else {
@@ -83,7 +85,7 @@ const Swiper = props => {
               //Check if swipe position is past the snap point
               if (currentPosition / itemWidth >= props.snapPoint) {
                 //Check if out of bounds to the left
-                if (transform + props.itemMarginRight + 5 > 0) {
+                if (transform + itemMarginRight + 5 > 0) {
                   //Reset back to first item
                   swipeTrack.style.transform = `translateX(${0})`;
                 } else {
@@ -99,7 +101,7 @@ const Swiper = props => {
           //Check if swipe position is past the snap point
           if (currentPosition / itemWidth >= props.snapPoint) {
             //Check if out of bounds to the left
-            if (transform + props.itemMarginRight + 5 > 0) {
+            if (transform + itemMarginRight + 5 > 0) {
               //Reset back to first item
               swipeTrack.style.transform = `translateX(${0})`;
             } else {
@@ -123,7 +125,7 @@ const Swiper = props => {
                 //Check if out of bounds to the left
                 if (
                   Math.abs(
-                    transform - props.itemMarginRight - 5 - itemWidth
+                    transform - itemMarginRight - 5 - itemWidth
                   ) >=
                   parseInt(
                     window
@@ -141,7 +143,7 @@ const Swiper = props => {
                         .replace("px", "")
                     ) -
                       itemWidth -
-                      props.itemMarginRight
+                      itemMarginRight
                   )}px)`;
                 } else {
                   if (currentPosition / itemWidth <= props.snapPoint) {
@@ -157,7 +159,7 @@ const Swiper = props => {
             else {
               if (
                 Math.abs(
-                  transform - props.itemMarginRight - 5 - itemWidth
+                  transform - itemMarginRight - 5 - itemWidth
                 ) >=
                 parseInt(
                   window
@@ -174,7 +176,7 @@ const Swiper = props => {
                       .replace("px", "")
                   ) -
                     itemWidth -
-                    props.itemMarginRight
+                    itemMarginRight
                 )}px)`;
               } else {
                 if (currentPosition / itemWidth <= props.snapPoint) {
@@ -189,7 +191,7 @@ const Swiper = props => {
           //No handlers
           if (
             Math.abs(
-              transform - props.itemMarginRight - 5 - itemWidth
+              transform - itemMarginRight - 5 - itemWidth
             ) >=
             parseInt(
               window
@@ -206,7 +208,7 @@ const Swiper = props => {
                   .replace("px", "")
               ) -
                 itemWidth -
-                props.itemMarginRight
+                itemMarginRight
             )}px)`;
           } else {
             if (currentPosition / itemWidth <= props.snapPoint) {
@@ -290,7 +292,6 @@ const Swiper = props => {
     }
   }, [
     props.snapPoint,
-    props.itemMarginRight,
     props.handlerObjects,
     props.transitionDuration
   ]);
