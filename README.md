@@ -1,16 +1,16 @@
-# react-swiper
+# react-hooks-swiper
 
 # Use
 
 Install
 ```sh
-npm install react-swiper
+npm install react-hooks-swiper
 ```
 
 Import
 
 ```
-import Swiper from 'react-swiper';
+import Swiper from 'react-hooks-swiper';
 ```
 
 Implement
