@@ -53,6 +53,7 @@ handleClick = () => {
    forceSwipe('right');
 }
 ```
+Note: it won't swipe if out of bounds.
 
 # License
 MIT
