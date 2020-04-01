@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import "./index.css";
 
-const Swiper = props => {
-
+export const Swiper = props => {
   let itemWidth;
   let itemMarginRight;
 
@@ -22,25 +21,40 @@ const Swiper = props => {
   useEffect(() => {
     //Define swipe functions
     const swipeLeft = (item, transform) => {
-        item.style.transform = `translateX(${transform +
-          Math.abs(itemWidth + itemMarginRight)}px)`;
-      };
-    
-      const swipeRight = (item, transform) => {
-        item.style.transform = `translateX(${-Math.abs(
-          -Math.abs(itemWidth + itemMarginRight) + transform
-        )}px)`;
-      };
+      item.style.transform = `translateX(${transform +
+        Math.abs(itemWidth + itemMarginRight)}px)`;
+    };
+
+    const swipeRight = (item, transform) => {
+      item.style.transform = `translateX(${-Math.abs(
+        -Math.abs(itemWidth + itemMarginRight) + transform
+      )}px)`;
+    };
 
     //When mounted define variables and references to the dom
     let initialPosition = null;
     let moving = false;
     let transform = 0;
     let index = 0;
-    itemWidth = parseInt(window.getComputedStyle(document.querySelector(".swipe-track > *:first-child")).getPropertyValue("width").replace("px", ""));
-    itemMarginRight = parseInt(window.getComputedStyle(document.querySelector(".swipe-track > *:first-child")).getPropertyValue("margin-right").replace("px", ""));
+    itemWidth = parseInt(
+      window
+        .getComputedStyle(
+          document.querySelector(".swipe-track > *:first-child")
+        )
+        .getPropertyValue("width")
+        .replace("px", "")
+    );
+    itemMarginRight = parseInt(
+      window
+        .getComputedStyle(
+          document.querySelector(".swipe-track > *:first-child")
+        )
+        .getPropertyValue("margin-right")
+        .replace("px", "")
+    );
     const swipeContainer = document.querySelector(".swipe-container");
     const swipeTrack = document.querySelector(".swipe-track");
+    swipeTrack.style.transform = `translateX(0px)`;
 
     const swipeStart = e => {
       //Set inital position, moving and transform
@@ -63,10 +77,25 @@ const Swiper = props => {
         //If diff is a positive number aka a left swipe
         if (Math.sign(diff) === 1) {
           //Run child handlers
-          if(props.handlerObjects.length > 0) {
-          props.handlerObjects.forEach(handler => {
-            if (handler.leftFunction && index === handler.id) {
-              if (handler.leftFunction() === true) {
+          if (props.handlerObjects.length > 0) {
+            props.handlerObjects.forEach(handler => {
+              if (handler.leftFunction && index === handler.id) {
+                if (handler.leftFunction() === true) {
+                  //Check if swipe position is past the snap point
+                  if (currentPosition / itemWidth >= props.snapPoint) {
+                    //Check if out of bounds to the left
+                    if (transform + itemMarginRight + 5 > 0) {
+                      //Reset back to first item
+                      swipeTrack.style.transform = `translateX(${0})`;
+                    } else {
+                      //Slide back 1
+                      swipeLeft(swipeTrack, transform);
+                      moving = false;
+                      index--;
+                    }
+                  }
+                }
+              } else {
                 //Check if swipe position is past the snap point
                 if (currentPosition / itemWidth >= props.snapPoint) {
                   //Check if out of bounds to the left
@@ -81,52 +110,68 @@ const Swiper = props => {
                   }
                 }
               }
-            } else {
-              //Check if swipe position is past the snap point
-              if (currentPosition / itemWidth >= props.snapPoint) {
-                //Check if out of bounds to the left
-                if (transform + itemMarginRight + 5 > 0) {
-                  //Reset back to first item
-                  swipeTrack.style.transform = `translateX(${0})`;
-                } else {
-                  //Slide back 1
-                  swipeLeft(swipeTrack, transform);
-                  moving = false;
-                  index--;
-                }
+            });
+          } else {
+            //Check if swipe position is past the snap point
+            if (currentPosition / itemWidth >= props.snapPoint) {
+              //Check if out of bounds to the left
+              if (transform + itemMarginRight + 5 > 0) {
+                //Reset back to first item
+                swipeTrack.style.transform = `translateX(${0})`;
+              } else {
+                //Slide back 1
+                swipeLeft(swipeTrack, transform);
+                moving = false;
+                index--;
               }
             }
-          });
-        } else {
-          //Check if swipe position is past the snap point
-          if (currentPosition / itemWidth >= props.snapPoint) {
-            //Check if out of bounds to the left
-            if (transform + itemMarginRight + 5 > 0) {
-              //Reset back to first item
-              swipeTrack.style.transform = `translateX(${0})`;
-            } else {
-              //Slide back 1
-              swipeLeft(swipeTrack, transform);
-              moving = false;
-              index--;
-            }
           }
-        }
         }
         //if diff is a negative number
         else if (Math.sign(diff) === -1) {
           //Run child handlers
-          if(props.handlerObjects.length > 0) {
-          props.handlerObjects.forEach(handler => {
-            //If the handler has a rightFunction and it's id is equal to the current index
-            if (handler.rightFunction && index === handler.id) {
-              //If the handler function returns true swipe
-              if (handler.rightFunction() === true) {
-                //Check if out of bounds to the left
+          if (props.handlerObjects.length > 0) {
+            props.handlerObjects.forEach(handler => {
+              //If the handler has a rightFunction and it's id is equal to the current index
+              if (handler.rightFunction && index === handler.id) {
+                //If the handler function returns true swipe
+                if (handler.rightFunction() === true) {
+                  //Check if out of bounds to the left
+                  if (
+                    Math.abs(transform - itemMarginRight - 5 - itemWidth) >=
+                    parseInt(
+                      window
+                        .getComputedStyle(swipeTrack)
+                        .getPropertyValue("width")
+                        .replace("px", "")
+                    )
+                  ) {
+                    //Reset to the last item
+                    swipeTrack.style.transform = `translateX(${-Math.abs(
+                      parseInt(
+                        window
+                          .getComputedStyle(swipeTrack)
+                          .getPropertyValue("width")
+                          .replace("px", "")
+                      ) -
+                        itemWidth -
+                        itemMarginRight
+                    )}px)`;
+                  } else {
+                    if (currentPosition / itemWidth <= props.snapPoint) {
+                      //Increment index and start transition
+                      moving = false;
+                      index++;
+                      swipeRight(swipeTrack, transform);
+                      console.log("After Swipe Index: ", index);
+                    }
+                  }
+                }
+              }
+              //If no handler function
+              else {
                 if (
-                  Math.abs(
-                    transform - itemMarginRight - 5 - itemWidth
-                  ) >=
+                  Math.abs(transform - itemMarginRight - 5 - itemWidth) >=
                   parseInt(
                     window
                       .getComputedStyle(swipeTrack)
@@ -134,7 +179,6 @@ const Swiper = props => {
                       .replace("px", "")
                   )
                 ) {
-                  //Reset to the last item
                   swipeTrack.style.transform = `translateX(${-Math.abs(
                     parseInt(
                       window
@@ -147,78 +191,43 @@ const Swiper = props => {
                   )}px)`;
                 } else {
                   if (currentPosition / itemWidth <= props.snapPoint) {
-                    //Increment index and start transition
                     moving = false;
                     index++;
                     swipeRight(swipeTrack, transform);
                   }
                 }
               }
-            }
-            //If no handler function
-            else {
-              if (
-                Math.abs(
-                  transform - itemMarginRight - 5 - itemWidth
-                ) >=
-                parseInt(
-                  window
-                    .getComputedStyle(swipeTrack)
-                    .getPropertyValue("width")
-                    .replace("px", "")
-                )
-              ) {
-                swipeTrack.style.transform = `translateX(${-Math.abs(
-                  parseInt(
-                    window
-                      .getComputedStyle(swipeTrack)
-                      .getPropertyValue("width")
-                      .replace("px", "")
-                  ) -
-                    itemWidth -
-                    itemMarginRight
-                )}px)`;
-              } else {
-                if (currentPosition / itemWidth <= props.snapPoint) {
-                  moving = false;
-                  index++;
-                  swipeRight(swipeTrack, transform);
-                }
-              }
-            }
-          });
-        } else {
-          //No handlers
-          if (
-            Math.abs(
-              transform - itemMarginRight - 5 - itemWidth
-            ) >=
-            parseInt(
-              window
-                .getComputedStyle(swipeTrack)
-                .getPropertyValue("width")
-                .replace("px", "")
-            )
-          ) {
-            swipeTrack.style.transform = `translateX(${-Math.abs(
+            });
+          } else {
+            //No handlers
+            if (
+              Math.abs(transform - itemMarginRight - 5 - itemWidth) >=
               parseInt(
                 window
                   .getComputedStyle(swipeTrack)
                   .getPropertyValue("width")
                   .replace("px", "")
-              ) -
-                itemWidth -
-                itemMarginRight
-            )}px)`;
-          } else {
-            if (currentPosition / itemWidth <= props.snapPoint) {
-              moving = false;
-              index++;
-              swipeRight(swipeTrack, transform);
+              )
+            ) {
+              swipeTrack.style.transform = `translateX(${-Math.abs(
+                parseInt(
+                  window
+                    .getComputedStyle(swipeTrack)
+                    .getPropertyValue("width")
+                    .replace("px", "")
+                ) -
+                  itemWidth -
+                  itemMarginRight
+              )}px)`;
+            } else {
+              if (currentPosition / itemWidth <= props.snapPoint) {
+                moving = false;
+                index++;
+                swipeRight(swipeTrack, transform);
+              }
             }
           }
         }
-      }
       }
     };
 
@@ -290,11 +299,7 @@ const Swiper = props => {
         }, parseFloat(props.transitionDuration) * 1000 + 10)
       );
     }
-  }, [
-    props.snapPoint,
-    props.handlerObjects,
-    props.transitionDuration
-  ]);
+  }, [props.snapPoint, props.handlerObjects, props.transitionDuration]);
 
   return (
     <div className="swipe-container">
@@ -311,3 +316,34 @@ const Swiper = props => {
 };
 
 export default Swiper;
+
+export const forceSwipe = direction => {
+  const itemWidth = parseInt(
+    window
+      .getComputedStyle(document.querySelector(".swipe-track > *:first-child"))
+      .getPropertyValue("width")
+      .replace("px", "")
+  );
+  const itemMarginRight = parseInt(
+    window
+      .getComputedStyle(document.querySelector(".swipe-track > *:first-child"))
+      .getPropertyValue("margin-right")
+      .replace("px", "")
+  );
+  const swipeTrack = document.querySelector(".swipe-track");
+  let transform;
+  const transformMatrix = window
+    .getComputedStyle(swipeTrack)
+    .getPropertyValue("transform");
+  if (transformMatrix !== "none") {
+    transform = parseInt(transformMatrix.split(",")[4].trim());
+  }
+  if (direction === "left") {
+    swipeTrack.style.transform = `translateX(${transform +
+      Math.abs(itemWidth + itemMarginRight)}px)`;
+  } else if (direction === "right") {
+    swipeTrack.style.transform = `translateX(${-Math.abs(
+      -Math.abs(itemWidth + itemMarginRight) + transform
+    )}px)`;
+  }
+};
