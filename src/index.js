@@ -71,6 +71,11 @@ export const Swiper = props => {
     const swipeMove = e => {
       //If moving
       if (moving) {
+        if(transform === 0) {
+          index = 0;
+        } else {
+          index = Math.round(Math.abs(((transform - 375) / 375) + 1));
+        }
         //Set current position and difference
         const currentPosition = e.pageX;
         const diff = currentPosition - initialPosition;
@@ -91,7 +96,6 @@ export const Swiper = props => {
                       //Slide back 1
                       swipeLeft(swipeTrack, transform);
                       moving = false;
-                      index--;
                     }
                   }
                 }
@@ -106,7 +110,6 @@ export const Swiper = props => {
                     //Slide back 1
                     swipeLeft(swipeTrack, transform);
                     moving = false;
-                    index--;
                   }
                 }
               }
@@ -122,7 +125,6 @@ export const Swiper = props => {
                 //Slide back 1
                 swipeLeft(swipeTrack, transform);
                 moving = false;
-                index--;
               }
             }
           }
@@ -136,7 +138,7 @@ export const Swiper = props => {
               if (handler.rightFunction && index === handler.id) {
                 //If the handler function returns true swipe
                 if (handler.rightFunction() === true) {
-                  //Check if out of bounds to the left
+                  //Check if out of bounds to the right
                   if (
                     Math.abs(transform - itemMarginRight - 5 - itemWidth) >=
                     parseInt(
@@ -161,9 +163,7 @@ export const Swiper = props => {
                     if (currentPosition / itemWidth <= props.snapPoint) {
                       //Increment index and start transition
                       moving = false;
-                      index++;
                       swipeRight(swipeTrack, transform);
-                      console.log("After Swipe Index: ", index);
                     }
                   }
                 }
@@ -192,7 +192,6 @@ export const Swiper = props => {
                 } else {
                   if (currentPosition / itemWidth <= props.snapPoint) {
                     moving = false;
-                    index++;
                     swipeRight(swipeTrack, transform);
                   }
                 }
@@ -222,7 +221,6 @@ export const Swiper = props => {
             } else {
               if (currentPosition / itemWidth <= props.snapPoint) {
                 moving = false;
-                index++;
                 swipeRight(swipeTrack, transform);
               }
             }
@@ -339,11 +337,24 @@ export const forceSwipe = direction => {
     transform = parseInt(transformMatrix.split(",")[4].trim());
   }
   if (direction === "left") {
-    swipeTrack.style.transform = `translateX(${transform +
-      Math.abs(itemWidth + itemMarginRight)}px)`;
+    //Check if not out of bounds to the left
+    if (transform + itemMarginRight + 5 < 0) {
+        swipeTrack.style.transform = `translateX(${transform +
+          Math.abs(itemWidth + itemMarginRight)}px)`;
+      }
   } else if (direction === "right") {
-    swipeTrack.style.transform = `translateX(${-Math.abs(
-      -Math.abs(itemWidth + itemMarginRight) + transform
-    )}px)`;
+    if (
+      Math.abs(transform - itemMarginRight - 5 - itemWidth) <=
+      parseInt(
+        window
+          .getComputedStyle(swipeTrack)
+          .getPropertyValue("width")
+          .replace("px", "")
+      )
+    ) {
+      swipeTrack.style.transform = `translateX(${-Math.abs(
+        -Math.abs(itemWidth + itemMarginRight) + transform
+      )}px)`;
+    }
   }
 };
