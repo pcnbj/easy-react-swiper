@@ -17,7 +17,7 @@ Implement
 
 ```
 <Swiper
-snapPoint={0.5}
+snapPoint={20}
 transitionDuration="0.2"
 handlerObjects={[]}>
     Insert pages here
@@ -39,7 +39,7 @@ Example structure:
 ```
 This will allow the user to swipe left on the first page but not right. NOTE: The user cannot swipe out of bound regardless of whether the leftFunction or rightFunction returns true.
 
-- snapPoint: a prop that decides how far the user has to swipe to trigger a swipe. Example 0.5 would be 50% of the width.
+- snapPoint: a prop that decides how far the user has to swipe to trigger a swipe in pixels. Example 20 will swipe if the swipe length is greater or equal to 20px.
 - transitionDuration: a prop that controls the speed of the CSS swipe transition in seconds.
 
 # Functions

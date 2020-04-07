@@ -89,7 +89,7 @@ export const Swiper = props => {
                 if(index === props.handlerObjects[i].id) {
                 if (props.handlerObjects[i].leftFunction() === true) {
                   //Check if swipe position is past the snap point
-                  if (currentPosition / itemWidth >= props.snapPoint) {
+                  if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
                     //Check if out of bounds to the left
                     if (transform + itemMarginRight + 5 > 0) {
                       //Reset back to first item
@@ -105,7 +105,7 @@ export const Swiper = props => {
               }
               } else {
                 //Check if swipe position is past the snap point
-                if (currentPosition / itemWidth >= props.snapPoint) {
+                if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
                   //Check if out of bounds to the left
                   if (transform + itemMarginRight + 5 > 0) {
                     //Reset back to first item
@@ -121,7 +121,7 @@ export const Swiper = props => {
             };
           } else {
             //Check if swipe position is past the snap point
-            if (currentPosition / itemWidth >= props.snapPoint) {
+            if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
               //Check if out of bounds to the left
               if (transform + itemMarginRight + 5 > 0) {
                 //Reset back to first item
@@ -167,7 +167,7 @@ export const Swiper = props => {
                         itemMarginRight
                     )}px)`;
                   } else {
-                    if (currentPosition / itemWidth <= props.snapPoint) {
+                    if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
                       //Increment index and start transition
                       moving = false;
                       swipeRight(swipeTrack, transform);
@@ -199,7 +199,7 @@ export const Swiper = props => {
                       itemMarginRight
                   )}px)`;
                 } else {
-                  if (currentPosition / itemWidth <= props.snapPoint) {
+                  if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
                     moving = false;
                     swipeRight(swipeTrack, transform);
                     break HandlerLoop;
@@ -229,7 +229,7 @@ export const Swiper = props => {
                   itemMarginRight
               )}px)`;
             } else {
-              if (currentPosition / itemWidth <= props.snapPoint) {
+              if (Math.abs(currentPosition - initialPosition) >= props.snapPoint) {
                 moving = false;
                 swipeRight(swipeTrack, transform);
               }
