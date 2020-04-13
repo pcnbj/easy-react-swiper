@@ -1,16 +1,16 @@
-# react-hooks-swiper
+# easy-react-swiper
 
 # Use
 
 Install
 ```sh
-npm install react-hooks-swiper
+npm install easy-react-swiper
 ```
 
 Import
 
 ```
-import Swiper from 'react-hooks-swiper';
+import Swiper from 'easy-react-swiper';
 ```
 
 Implement
@@ -47,7 +47,7 @@ This will allow the user to swipe left on the first page but not right. NOTE: Th
 - forceSwipe: a function that allows you to force a swipe.
 Example use:
 ```
-import { forceSwipe } from 'react-hooks-swiper';
+import { forceSwipe } from 'easy-react-swiper';
 
 handleClick = () => {
    forceSwipe('right');
