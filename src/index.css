@@ -1,11 +1,4 @@
-.swipe-container {
-    background-color: #444;
-    position: relative;
-    touch-action: none;
-    overflow: hidden;
-}
-
-.swipe-container .swipe-track {
+.swipe-track {
     position: absolute;
     width: auto;
     top: 0px;
@@ -13,8 +6,7 @@
     display: inline-flex;
     touch-action: none;
 }
-
-.swipe-container .swipe-track .swipe-item {
+.swipe-item {
     width: 100vw;
     height: 100vh;
     background-color: pink;

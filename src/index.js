@@ -39,7 +39,7 @@ export const Swiper = props => {
     itemWidth = parseInt(
       window
         .getComputedStyle(
-          document.querySelector(".swipe-track > *:first-child")
+          document.querySelector(`.${props.id} > .swipe-track > *:first-child`)
         )
         .getPropertyValue("width")
         .replace("px", "")
@@ -47,13 +47,13 @@ export const Swiper = props => {
     itemMarginRight = parseInt(
       window
         .getComputedStyle(
-          document.querySelector(".swipe-track > *:first-child")
+          document.querySelector(`.${props.id} > .swipe-track > *:first-child`)
         )
         .getPropertyValue("margin-right")
         .replace("px", "")
     );
-    const swipeContainer = document.querySelector(".swipe-container");
-    const swipeTrack = document.querySelector(".swipe-track");
+    const swipeContainer = document.querySelector(`.${props.id}`);
+    const swipeTrack = document.querySelector(`.${props.id} > .swipe-track`);
     swipeTrack.style.transform = `translateX(0px)`;
 
     const swipeStart = e => {
@@ -309,8 +309,14 @@ export const Swiper = props => {
     }
   }, [props.snapPoint, props.handlerObjects, props.transitionDuration]);
 
+  const containerStyle = {
+    position: 'relative',
+    overflow: 'hidden',
+    touchAction: 'none'
+  }
+
   return (
-    <div className="swipe-container">
+    <div style={containerStyle} className={props.id}>
       <div
         style={{
           transition: `transform ${props.transitionDuration}s ease-in-out`
@@ -325,20 +331,20 @@ export const Swiper = props => {
 
 export default Swiper;
 
-export const forceSwipe = direction => {
+export const forceSwipe = (id, direction) => {
   const itemWidth = parseInt(
     window
-      .getComputedStyle(document.querySelector(".swipe-track > *:first-child"))
+      .getComputedStyle(document.querySelector(`.${id} > .swipe-track > *:first-child`))
       .getPropertyValue("width")
       .replace("px", "")
   );
   const itemMarginRight = parseInt(
     window
-      .getComputedStyle(document.querySelector(".swipe-track > *:first-child"))
+      .getComputedStyle(document.querySelector(`.${id} > .swipe-track > *:first-child`))
       .getPropertyValue("margin-right")
       .replace("px", "")
   );
-  const swipeTrack = document.querySelector(".swipe-track");
+  const swipeTrack = document.querySelector(`.${id} > .swipe-track`);
   let transform;
   const transformMatrix = window
     .getComputedStyle(swipeTrack)

@@ -17,14 +17,13 @@ Implement
 
 ```
 <Swiper
+id="randomSwiper"
 snapPoint={20}
 transitionDuration="0.2"
 handlerObjects={[]}>
     Insert pages here
 </Swiper>
 ```
-
-Note: you can only have 1 swiper per page as it uses querySelector to get the element by class.
 
 # Swiper props
 
@@ -41,6 +40,7 @@ This will allow the user to swipe left on the first page but not right. NOTE: Th
 
 - snapPoint: a prop that decides how far the user has to swipe to trigger a swipe in pixels. Example 20 will swipe if the swipe length is greater or equal to 20px.
 - transitionDuration: a prop that controls the speed of the CSS swipe transition in seconds.
+- id: a props that's used to give a class to the swiper target with CSS for custom styling.
 
 # Functions
 
@@ -50,7 +50,7 @@ Example use:
 import { forceSwipe } from 'easy-react-swiper';
 
 handleClick = () => {
-   forceSwipe('right');
+   forceSwipe('randomSwiper', 'right');
 }
 ```
 Note: it won't swipe if out of bounds.
